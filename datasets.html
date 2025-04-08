@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datasets</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="header"></div>
+
+
+    <section class="hero">
+        <div id="logo"></div>
+        <div class="hero-content", id="dataset-content">
+            <h1>Datasets</h1>
+
+            <h2>Details on the Training, Validation, and Final Challenge Datasets coming soon!</h2>
+
+            <h2>Training datasets</h2>
+            <p>These are labeled datasets that allow the proponents to train their algorithms. The goal here is to provide some comfort with the dataset format and how to process the information.
+            </p>
+
+            <h2>Validation/evaluation datasets</h2>
+
+             <p>We provide a private validation dataset to allow the participants to test their model for submission. The evaluation metrics match those of the overall evalution for the test datasets.
+            </p>
+
+            <h2>Final Challenge datasets</h2>
+
+            <p>Performance on the Final challenge datasets will determine challenge scores. Please see the individual challenges for more details on the evaluation. Submission scoring code is provided on each challenge's GitHub repository as well.
+
+             </p>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        // Function to load external HTML into an element
+        function loadHTML(file, elementId) {
+            fetch(file)
+                .then(response => response.text())
+                .then(data => document.getElementById(elementId).innerHTML = data)
+                .catch(error => console.error('Error loading HTML:', error));
+        }
+
+        // Load header, navigation, and footer
+        loadHTML('layout/header.html', 'header');
+        loadHTML('layout/logo.html', 'logo');
+        loadHTML('layout/footer.html', 'footer');
+    </script>
+
+</body>
+</html>
