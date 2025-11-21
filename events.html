@@ -122,6 +122,101 @@
       return eventDate >= today && eventDate <= oneWeekFromNow;
     }
 
+    // Function to check if event date is in the past (at least 1 day past)
+    function isPastEvent(eventDate) {
+      if (!eventDate) return false; // TBD dates are not past events
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // Calculate yesterday (1 day before today)
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      eventDate.setHours(0, 0, 0, 0);
+
+      // Event is past only if it's at least 1 day before today
+      return eventDate < yesterday;
+    }
+
+    // Function to organize events by date
+    function organizeEventsByDate() {
+      // Find the sections by checking summary text
+      const allDetails = document.querySelectorAll('details');
+      let upcomingDetails = null;
+      let pastDetails = null;
+
+      allDetails.forEach(details => {
+        const summary = details.querySelector('summary');
+        if (summary) {
+          const summaryText = summary.textContent.trim();
+          if (summaryText.includes('Upcoming')) {
+            upcomingDetails = details;
+          } else if (summaryText.includes('Past')) {
+            pastDetails = details;
+          }
+        }
+      });
+
+      if (!upcomingDetails || !pastDetails) return;
+
+      const upcomingUl = upcomingDetails.querySelector('ul');
+      const pastUl = pastDetails.querySelector('ul');
+
+      if (!upcomingUl || !pastUl) return;
+
+      // Get all list items from both sections
+      const allItems = Array.from(document.querySelectorAll('details ul li'));
+
+      // Separate items into upcoming and past
+      const upcomingItems = [];
+      const pastItems = [];
+
+      allItems.forEach(item => {
+        const dateSpan = item.querySelector('.event-date');
+        if (dateSpan) {
+          const dateText = dateSpan.textContent;
+          const eventDate = parseEventDate(dateText);
+
+          if (isPastEvent(eventDate)) {
+            pastItems.push({ item, date: eventDate });
+          } else {
+            upcomingItems.push({ item, date: eventDate });
+          }
+        } else {
+          // If no date, keep in upcoming
+          upcomingItems.push({ item, date: null });
+        }
+      });
+
+      // Sort upcoming events by date (earliest first, TBD last)
+      upcomingItems.sort((a, b) => {
+        if (!a.date) return 1; // TBD goes to end
+        if (!b.date) return -1;
+        return a.date - b.date;
+      });
+
+      // Sort past events by date (most recent first)
+      pastItems.sort((a, b) => {
+        if (!a.date) return 1;
+        if (!b.date) return -1;
+        return b.date - a.date; // Reverse order for past events
+      });
+
+      // Clear both lists
+      upcomingUl.innerHTML = '';
+      pastUl.innerHTML = '';
+
+      // Add items to appropriate sections
+      upcomingItems.forEach(({ item }) => {
+        upcomingUl.appendChild(item);
+      });
+
+      pastItems.forEach(({ item }) => {
+        pastUl.appendChild(item);
+      });
+    }
+
     // Function to flash events close to date
     function flashUpcomingEvents() {
       const eventItems = document.querySelectorAll('li');
@@ -141,7 +236,10 @@
 
     // Run after page loads
     window.addEventListener('load', () => {
-      setTimeout(flashUpcomingEvents, 100); // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        organizeEventsByDate();
+        flashUpcomingEvents();
+      }, 100); // Small delay to ensure DOM is ready
     });
   </script>
 
