@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div id="header"></div>
+
+
+  <section class="hero">
+    <div id="logo"></div>
+    <div class="hero-content" id="events-content">
+      <h1>Hackathons / Events</h1>
+      <br>
+      <br>
+      <p>
+        Check out our upcoming hackathons and events! We're hosting a variety of events throughout the year, from
+        hackathons to workshops to help you get started with the challenge!!
+      </p>
+      <br>
+      <p>
+        <b>Click the link below to find out events near you and how to participate! You can also check out our past
+          events</b>
+      </p>
+      <br>
+      <details open>
+        <summary class="flashing-text">Upcoming Events</summary>
+        <ul>
+          <li><a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSd-K2hu1g4xxc3Fxj0qPoGDOVt_T-sWw7TSgEtEkPZUlAA6Cg/viewform"
+              target="_blank">NEON/ESIIL Hackathon</a> -
+            <span class="event-date">Date: December 12 & 15, 2025</span> - <span class="event-location">📍 CU
+              Boulder</span>
+          </li>
+          <li><a href="https://indico.cern.ch/event/1607943/" target="_blank">HDR ML Challenge Online Hackathon</a> -
+            <span class="event-date">Date: December 18, 2025</span> - <span class="event-location">💻 Online</span>
+          </li>
+          <li><a href="https://indico.cern.ch/event/1610056/" target="_blank">2025 NSF HDR (Scientific-Mood) 黑客松 in
+              Taiwan</a> - <span class="event-date">Date: December 19, 2025</span> - <span class="event-location">💻
+              Taiwan (Online)</span></li>
+          <li><a href="https://indico.cern.ch/event/1604685/overview" target="_blank">UW A3D3 & NSF HDR Challenge
+              Hackathon</a> - <span class="event-date">Date: January 10, 2026</span> - <span class="event-location">📍
+              University of Washington</span></li>
+          <li><a href="https://www.nsfhdr.org/mlchallenge-y2" target="_blank">Award ceremony @ FAIR in ML, AI Readiness,
+              &
+              Reproducibility (FARR) Conference</a> - <span class="event-date">Date: TBD</span> - <span
+              class="event-location">📍
+              TBD</span></li>
+        </ul>
+      </details>
+      <br>
+      <details open>
+        <summary>Past Events</summary>
+        <ul>
+          <li><a href="https://indico.cern.ch/event/1596669/" target="_blank">HDR ML Challenge Online Hackathon &
+              Organizer Training
+              mini-workshop</a> - <span class="event-date">Date: October 23, 2025</span> - <span
+              class="event-location">💻 Online</span></li>
+        </ul>
+      </details>
+      <br>
+
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script>
+    // Function to load external HTML into an element
+    function loadHTML(file, elementId) {
+      fetch(file)
+        .then(response => response.text())
+        .then(data => document.getElementById(elementId).innerHTML = data)
+        .catch(error => console.error('Error loading HTML:', error));
+    }
+
+    // Load header, navigation, and footer
+    loadHTML('layout/header.html', 'header');
+    loadHTML('layout/logo.html', 'logo');
+    loadHTML('layout/footer.html', 'footer');
+
+    // Function to parse date from text like "Date: December 18, 2025"
+    function parseEventDate(dateText) {
+      if (dateText.includes('TBD')) return null;
+
+      // Extract date string after "Date: "
+      const dateMatch = dateText.match(/Date:\s*(.+)/);
+      if (!dateMatch) return null;
+
+      let dateStr = dateMatch[1].trim();
+
+      // Handle multiple dates (e.g., "December 12 & 15, 2025") - use the first date
+      if (dateStr.includes('&')) {
+        dateStr = dateStr.split('&')[0].trim() + ', ' + dateStr.split(',')[1];
+      }
+
+      // Parse the date
+      const date = new Date(dateStr);
+      return isNaN(date.getTime()) ? null : date;
+    }
+
+    // Function to check if date is within a week
+    function isWithinWeek(eventDate) {
+      if (!eventDate) return false;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const oneWeekFromNow = new Date(today);
+      oneWeekFromNow.setDate(today.getDate() + 14);
+
+      eventDate.setHours(0, 0, 0, 0);
+
+      // Check if event is in the future and within 7 days
+      return eventDate >= today && eventDate <= oneWeekFromNow;
+    }
+
+    // Function to flash events close to date
+    function flashUpcomingEvents() {
+      const eventItems = document.querySelectorAll('li');
+
+      eventItems.forEach(item => {
+        const dateSpan = item.querySelector('.event-date');
+        if (dateSpan) {
+          const dateText = dateSpan.textContent;
+          const eventDate = parseEventDate(dateText);
+
+          if (isWithinWeek(eventDate)) {
+            item.classList.add('flash-event');
+          }
+        }
+      });
+    }
+
+    // Run after page loads
+    window.addEventListener('load', () => {
+      setTimeout(flashUpcomingEvents, 100); // Small delay to ensure DOM is ready
+    });
+  </script>
+
+</body>
+
+</html>

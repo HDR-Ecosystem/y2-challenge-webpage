@@ -424,6 +424,7 @@ details summary {
     list-style: none;
     /* Hides default marker */
     outline: none;
+    font-size: 1.5em;
 }
 
 /* Remove the default marker */
@@ -450,10 +451,6 @@ details div,
 details li {
     margin: 0.5em 0;
     line-height: 1.4;
-}
-
-summary {
-    margin-left: -40em;
 }
 
 .emoji-list li {
@@ -505,4 +502,58 @@ summary {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
+}
+
+/* Event date styling */
+.event-date {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Event location styling */
+.event-location {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Flashing text animation */
+@keyframes flash {
+
+    0%,
+    50%,
+    100% {
+        opacity: 1;
+    }
+
+    25%,
+    75% {
+        opacity: 0.3;
+    }
+}
+
+.flashing-text {
+    animation: flash 1.5s infinite;
+    color: red;
+}
+
+/* Flash event animation for upcoming events */
+@keyframes flash-event {
+
+    0%,
+    50%,
+    100% {
+        background-color: transparent;
+    }
+
+    25%,
+    75% {
+        background-color: rgba(255, 0, 0, 0.2);
+    }
+}
+
+.flash-event {
+    animation: flash-event 1.5s infinite;
+    border-radius: 4px;
+    padding: 2px 4px;
 }
